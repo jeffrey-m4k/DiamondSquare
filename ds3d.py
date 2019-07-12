@@ -154,11 +154,11 @@ def makeMap(outputName, rows=513, cols=513):
 		img.save(outputName)
 		print("Output saved as " + outputName)
 
-	if not "-3donly" and not "-x" in sys.argv:
+	if not "-3donly" in sys.argv and not "-x" in sys.argv:
 		plt.imshow(noiseMap, cmap='terrain', interpolation='nearest')
 		plt.show()
 
-	if not "-2donly" and not "-x" in sys.argv:
+	if not "-2donly" in sys.argv and not "-x" in sys.argv:
 		mlab.surf(noiseMap)
 		mlab.show()
 
