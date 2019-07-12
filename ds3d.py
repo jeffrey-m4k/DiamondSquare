@@ -1,4 +1,5 @@
 import math, random, numpy as np, datetime, time, sys, matplotlib.pyplot as plt
+from PIL import Image
 from mayavi import mlab
 
 def avg(*arg):
@@ -153,18 +154,18 @@ def makeMap(outputName, rows=513, cols=513):
 		img.save(outputName)
 		print("Output saved as " + outputName)
 
-	if not "-3d" in sys.argv:
+	if not "-3donly" and not "-x" in sys.argv:
 		plt.imshow(noiseMap, cmap='terrain', interpolation='nearest')
 		plt.show()
 
-	if not "-2d" in sys.argv:
+	if not "-2donly" and not "-x" in sys.argv:
 		mlab.surf(noiseMap)
 		mlab.show()
 
 
 try:
 	mapWidth, mapHeight = (int(sys.argv[1]),int(sys.argv[1]))
-except IndexError:
+except (IndexError, ValueError):
 	print("No width and height specified, defaulting to 513x513.")
 	mapWidth = 513
 	mapHeight = 513
