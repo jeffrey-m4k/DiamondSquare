@@ -9,5 +9,11 @@ The script can be run directly, or from the command line. By default it will out
 **-x**: The program will display neither a 2D nor 3D heightmap. Has the same effect as passing both *-2donly* and *-3donly* arguments.
 
 Obviously, the larger the array, the higher the computation time. For every power of 2, the time will increase by roughly four times. On my machine, a 257x257 array takes about 1 second, a 513x513 array takes 4, and a 1025x1025 array takes 18.
+
+Various values in the script can be tweaked for different results: for instance, changing rCap will alter the roughness of the heightmap.
 ## 2. Example Results
-TBA
+For best results with the 3D feature, a size of 513x513 should be used. Smaller arrays will have exaggerated heights, leading to a chaotic, spiky terrain, while larger arrays will be increasingly flat and lack much definition.
+
+![A generated 129x129 heightmap](https://github.com/jeffrey-majlik/DiamondSquare/blob/master/images/2d-preview_1.png)
+![A generated 129x129 heightmap](https://github.com/jeffrey-majlik/DiamondSquare/blob/master/images/2d-preview_2.png)
+![A generated 3D visualization](https://github.com/jeffrey-majlik/DiamondSquare/blob/master/images/3d-preview.png)
