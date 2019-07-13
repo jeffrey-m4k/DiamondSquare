@@ -1,4 +1,4 @@
-# DiamondSquare
+# DiamondSquare [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 This is a Python 3.7 implementation of a diamond-square algorithm, used for procedural heightmap/terrain generation.
 ## 1. Usage
 The script can be run directly or from the command line. By default it will output a 513x513 image file to its folder, as well as displaying a 2D heightmap in Matplotlib and a 3D visualization of that heightmap using Mayavi. When run via the command line, several arguments can be passed:
