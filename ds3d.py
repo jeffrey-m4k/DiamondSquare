@@ -1,3 +1,5 @@
+# Todo: Use argparse to get arguments instead of just reading sys.argv
+
 import math, random, numpy as np, datetime, time, sys, matplotlib.pyplot as plt
 from PIL import Image
 from mayavi import mlab
@@ -11,13 +13,16 @@ def main(rows=513, cols=513):
 	global noiseMap
 
 	startTime = time.time()
+
 	print("\n")
 	sys.stdout.write("\rInitializing heightmap...")
+
 	noiseMap = np.zeros((cols,rows))
 	noiseMap[0,0], noiseMap[0,cols-1], noiseMap[rows-1,0], noiseMap[rows-1,cols-1] \
 		= (random.sample(list(range(256)), 4))
+
 	stepSize = cols-1
-	rCap = 100
+	rCap = 150
 	r = lambda: random.randrange(int(-rCap),int(rCap+1),1)
 
 	# Not required for the algorithm, just to give some info to the user
@@ -48,7 +53,7 @@ def main(rows=513, cols=513):
 		sys.stdout.flush()
 
 		stepSize //= 2
-		rCap *= .5
+		rCap *= .45
 
 	print((" Done in " + str(round(time.time() - startTime, 3)) + "s\n"))
 
@@ -114,6 +119,7 @@ def diaStep(x, y, stepSize, r):
 	avgValue = avg(noiseMap[x,y],noiseMap[x+stepSize,y],noiseMap[x,y+stepSize],noiseMap[x+stepSize,y+stepSize])
 	indexToChange = (x+stepSize//2, y+stepSize//2)
 	noiseMap[indexToChange] = avgValue + r
+	
 	if noiseMap[indexToChange] > 255:
 		noiseMap[indexToChange] = 255
 	elif noiseMap[indexToChange] < 0:
@@ -141,36 +147,34 @@ def squareStep(x, y, stepSize, r, aSize):
 		noiseMap[x,y] = 0
 
 
-def makeMap(outputName, rows=513, cols=513):
+def makeMap(outputName, size):
 
 	global noiseMap
 
-	main(rows,cols)
-
-	noiseMap = noiseMap.astype(np.uint8)
+	main(size,size)
 
 	if not "-ns" in sys.argv:
-		img = Image.fromarray(noiseMap)
+		noiseMapB = noiseMap.astype(np.uint8)
+		img = Image.fromarray(noiseMapB)
 		img.save(outputName)
 		print("Output saved as " + outputName)
 
 	if not "-3donly" in sys.argv and not "-x" in sys.argv:
-		plt.imshow(noiseMap, cmap='terrain', interpolation='nearest')
+		plt.imshow(noiseMap, cmap='tab20b', interpolation='nearest')
 		plt.show()
 
 	if not "-2donly" in sys.argv and not "-x" in sys.argv:
-		mlab.surf(noiseMap)
+		mlab.surf(noiseMap, colormap='gist_earth', warp_scale='auto')
 		mlab.show()
 
 
 try:
-	mapWidth, mapHeight = (int(sys.argv[1]),int(sys.argv[1]))
+	size = int(sys.argv[1])
 except (IndexError, ValueError):
 	print("No width and height specified, defaulting to 513x513.")
-	mapWidth = 513
-	mapHeight = 513
+	size = 513
 
 
-outputName = "DS-" + str(mapWidth) + "x" + str(mapHeight) + "-" + str(datetime.datetime.now()).replace(':', '') + ".png"
-makeMap(outputName, mapWidth, mapHeight)
+outputName = "DS-" + str(size) + "x" + str(size) + "-" + str(datetime.datetime.now()).replace(':', '') + ".png"
+makeMap(outputName, size)
 	
