@@ -8,7 +8,7 @@ def avg(*arg):
 	return sum(arg)/len(arg)
 
 
-def main(rows=513, cols=513):
+def main(mapSize):
 
 	global noiseMap
 
@@ -17,24 +17,27 @@ def main(rows=513, cols=513):
 	print("\n")
 	sys.stdout.write("\rInitializing heightmap...")
 
-	noiseMap = np.zeros((cols,rows))
-	noiseMap[0,0], noiseMap[0,cols-1], noiseMap[rows-1,0], noiseMap[rows-1,cols-1] \
+	noiseMap = np.zeros((mapSize,mapSize))
+	noiseMap[0,0], noiseMap[0,mapSize-1], noiseMap[mapSize-1,0], noiseMap[mapSize-1,mapSize-1] \
 		= (random.sample(list(range(256)), 4))
 
-	stepSize = cols-1
+	stepSize = mapSize-1
+
+	# Tweak rCap to modify roughness of terrain
+
 	rCap = 150
 	r = lambda: random.randrange(int(-rCap),int(rCap+1),1)
 
 	# Not required for the algorithm, just to give some info to the user
 
-	stepsRequired = str(int(math.log(cols-1, 2)) * 2)
+	stepsRequired = str(int(math.log(mapSize-1, 2)) * 2)
 	stepCount = 1
 
 	while stepSize > 1:
-		stepFactor = int(((cols-1) // stepSize))
+		stepFactor = int(((mapSize-1) // stepSize))
 		nOfSquares = stepFactor**2
-		sqList = getSquares(cols-1, stepFactor)
-		diaList = getDiamonds(cols-1, stepFactor, sqList)
+		sqList = getSquares(mapSize-1, stepFactor)
+		diaList = getDiamonds(mapSize-1, stepFactor, sqList)
 
 		sys.stdout.flush()
 		sys.stdout.write("\rPerforming diamond step [" + str(stepCount) + "/" + stepsRequired + "]")
@@ -47,7 +50,7 @@ def main(rows=513, cols=513):
 		sys.stdout.write("\rPerforming square step  [" + str(stepCount) + "/" + stepsRequired + "]")
 
 		for x in range(len(diaList)):
-			squareStep(diaList[x][0], diaList[x][1], stepSize, r(), cols-1)
+			squareStep(diaList[x][0], diaList[x][1], stepSize, r(), mapSize-1)
 
 		stepCount += 1
 		sys.stdout.flush()
@@ -151,7 +154,7 @@ def makeMap(outputName, size):
 
 	global noiseMap
 
-	main(size,size)
+	main(size)
 
 	if not "-ns" in sys.argv:
 		noiseMapB = noiseMap.astype(np.uint8)
